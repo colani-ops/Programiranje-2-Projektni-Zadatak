@@ -1,0 +1,56 @@
+#include "header.h"
+#include "menus.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
+
+int mainMenu() {
+
+	int odabir1 = 1;
+
+	while (odabir1 != 6) {
+
+		system("cls");
+
+		printf("\n==========Main Menu==========");//realloc
+		printf("\n\n 1. Add new Space Marine");		//dinamicki alocirat temp polje koje ima velicinu kao polje u datoteci ali + 1 kada dodajemo novog
+		printf("\n\n 2. Remove a Space Marine");
+		printf("\n\n 3. Print the list");
+		printf("\n\n 4. Sort the list");
+		printf("\n\n 5. Search the list");
+		printf("\n\n 6. Exit");
+
+		printf("\n\n Odabir : ");
+
+
+		scanf("%d", &odabir1);
+
+		switch (odabir1) {
+
+		case 1:
+			break;
+
+		case 2:
+			break;
+
+		case 3:
+			break;
+
+		case 4:
+			sortMenu();
+			break;
+
+		case 5:
+			searchMenu();
+			break;
+
+		default:
+			break;
+
+		}
+
+	}
+
+	exit(EXIT_SUCCESS);
+
+}
