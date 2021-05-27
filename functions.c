@@ -4,8 +4,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>
+
 /*Polje strutura (squadova) koja u sebi imaju vise space marinaca,
-prilikom saveanja overwriteat sve u postojecoj datoteci*/
+prilikom saveanja overwriteat sve u postojecoj datoteci
+squadAmount iznosi velicinu polja squadova odnosno broj squadova u datoteci
+te bi trebao biti prvi zapisan u datoteci.*/
+
+/*Prilikom otvaranja datoteke, u slucaju da datoteka ne postoji, korisnik unosi zeljeni broj
+squadova odnosno velicinu polja squadova (prilikom dodavanja squadova se velicina polja/squad amount povecava i updatea)*/
+
+static int squadAmount;
 
 int provjeraDatoteke(char* imeDatoteke) {
 
@@ -17,6 +25,9 @@ int provjeraDatoteke(char* imeDatoteke) {
 		printf("\nNe postoji datoteka, kreiranje datoteke...");
 
 		FILE* input = fopen(imeDatoteke, "wb+");
+		printf("\nUnesite broj squadova : ");
+		scanf("%d", &squadAmount);
+		fwrite(&squadAmount, sizeof(int), 1, input);
 
 		if (input == NULL) {
 			printf("\nGreska u kreiranju datoteke");
@@ -28,9 +39,9 @@ int provjeraDatoteke(char* imeDatoteke) {
 
 	else {
 
+		fread(&squadAmount, sizeof(int), 1, input);
+
 		fclose(input);
-
-
 	}
 	return 1;
 
@@ -38,31 +49,29 @@ int provjeraDatoteke(char* imeDatoteke) {
 
 
 
-SMSquad* dodavanjeSquada(SMunit* unit) {
+void dodavanjeSquada(char* imeDatoteke) {
 
-	unit->squads = (SMSquad*)realloc(unit->squads, unit->sAmount + 1);
+	int test;
 
-
-	printf("\nUnesite squad number : ");
-	scanf("%d", &unit->squads[sAmount].squadNumber);
-	printf("\nUnesite marine count : ");
-	scanf("%d", &unit->squads[sAmount].marineCount);
-	printf("\nUnesite squad type");
-	scanf("%16s", unit->squads[sAmount].squadType);
-
-	for (int i = 0; squads->marineCount; i++) {
-
-		
-
-		return squads;
-
+	FILE* file = fopen(imeDatoteke, "rb+");
+	if (file == NULL) {
+		perror("Otvaranje datoteke.");
+		exit(EXIT_FAILURE);
 	}
+
+	fread(&squadAmount, sizeof(int), 1, file);
+	printf("Trenutni broj squadova je : %d", squadAmount);
+
+
+	printf("\n");
+
+	scanf("%d", &test);
 
 }
 
 
 
-void inputSquada() {
+/*void inputSquada() {
 
 	int i;
 	int j;
@@ -76,29 +85,31 @@ void inputSquada() {
 		printf("\nUnesite squad type : ");
 
 
-		for (j = 0; j < squads.marineCount; j++) {
+		for (j = 0; j < squadArray.marineCount; j++) {
 
 			printf("\nUnesite ime : ");
-			scanf("%63[^\n]", SMunit->squads[sAmount].marineArray[j].name);
+			scanf("%63[^\n]", SMunit->squadArray[sAmount].marineArray[j].name);
 			printf("\nUnesite rank : ");
-			scanf("%31[^\n]", SMunit->squads[sAmount].marineArray[j].rank);
+			scanf("%31[^\n]", SMunit->squadArray[sAmount].marineArray[j].rank);
 			printf("\nUnesite company : ");
-			scanf("%31[^\n]", SMunit->squads[sAmount].marineArray[j].company);
+			scanf("%31[^\n]", SMunit->squadArray[sAmount].marineArray[j].company);
 			printf("\nUnesite age : ");
-			scanf("%d", SMunit->squads[sAmount].marineArray[j].age);
+			scanf("%d", SMunit->squadArray[sAmount].marineArray[j].age);
 			printf("\nUnesite years of service : ");
-			scanf("%d", SMunit->squads[sAmount].marineArray[j].yearsOfService);
+			scanf("%d", SMunit->squadArray[sAmount].marineArray[j].yearsOfService);
 			printf("\nUnesite speciality");
-			scanf("%15[^\n]", SMunit->squads[sAmount].marineArray[j].speciality);
+			scanf("%15[^\n]", SMunit->squadArray[sAmount].marineArray[j].speciality);
 
 		}
 
 	}
 
-}
+}*/
 
 
-SMSquad* sRead(char* imeDatoteke) {
+
+
+/*SMSquad* sRead(char* imeDatoteke) {
 
 	FILE* input = fopen(imeDatoteke, "rb");
 	if (input == NULL) {
@@ -106,7 +117,7 @@ SMSquad* sRead(char* imeDatoteke) {
 	}
 
 	int sAmount;
-	fread(&sAmount, sizeof(int), 1, input);
+	
 
 	SMSquad* squadArray = (SMSquad*)malloc(sAmount * sizeof(SMSquad));
 
@@ -116,7 +127,7 @@ SMSquad* sRead(char* imeDatoteke) {
 
 	return squadArray;
 
-}
+}*/
 
 
 
@@ -137,3 +148,21 @@ void sWrite(char* imeDatoteke, SMSquad* outArray, int sizeOfOutArray) {
 void zatvaranje() {
 	exit(EXIT_SUCCESS);
 }
+
+
+
+/*
+
+struct unit {
+
+	squads [1, 2, 3, 4, 5]
+		
+		1. squad => struct smsquad 
+			[sm1, sm2, sm3, sm4]
+
+				sm1 => struct spacemarine
+
+
+}
+
+*/
