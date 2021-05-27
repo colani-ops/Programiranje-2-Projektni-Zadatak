@@ -7,35 +7,24 @@ typedef struct SpaceMarine {
 
 	char name[64];
 	char rank[32];
-	char company[32];
 	int age;
 	int yearsOfService;
-	char speciality[16];
 
 }SpaceMarine;
 
 typedef struct SpaceMarineSquad {
 
-	int squadNumber;
+	int squadNumber; //radi kao ID, prilikom pretrazivanja i brisanja.
 	int marineCount;
 	char squadType[16];
 
-	struct SpaceMarine* marineArray;//ovdje dinamicki alocirati broj marinaca u squadu sa marine count prilikom dodavanja.
-									//Mozda napraviti da se dodaje squad po squad a ne marine po marine.
-
+	struct SpaceMarine* marinesArray;	//Ovdje dinamicki alocirati broj marinaca u squadu sa marine count prilikom dodavanja.
 
 }SMSquad;
 
-typedef struct SpaceMarineUnit {
-
-	int sAmount;
-
-	struct SpaceMarineSquad* squads;
-
-}SMunit;
 
 int provjeraDatoteke(char* imeDatoteke);
-SMSquad* dodavanjeSquada(SMunit* unit);
+void dodavanjeSquada(char* imeDatoteke);
 SMSquad* sRead(char* imeDatoteke);
 void sWrite(char* imeDatoteke, SMSquad* outArray, int sizeOfOutArray);
 
