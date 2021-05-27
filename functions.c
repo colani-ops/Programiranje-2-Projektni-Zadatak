@@ -13,7 +13,7 @@ te bi trebao biti prvi zapisan u datoteci.*/
 /*Prilikom otvaranja datoteke, u slucaju da datoteka ne postoji, korisnik unosi zeljeni broj
 squadova odnosno velicinu polja squadova (prilikom dodavanja squadova se velicina polja/squad amount povecava i updatea)*/
 
-static int squadAmount;
+
 
 int provjeraDatoteke(char* imeDatoteke) {
 
@@ -66,6 +66,21 @@ void dodavanjeSquada(char* imeDatoteke) {
 	printf("\n");
 
 	scanf("%d", &test);
+
+}
+
+void provjeraBrojaSquadova(char* imeDatoteke) {
+
+	FILE* file = fopen(imeDatoteke, "rb");
+
+	fread(&squadAmount, sizeof(int), 1, file);
+	system("cls");
+
+	printf("\nTrenutni broj squadova je : %d", squadAmount);
+	printf("\n\nPress any key to continue.");
+	_getch();
+
+	fclose(file);
 
 }
 
