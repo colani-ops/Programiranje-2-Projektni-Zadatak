@@ -8,18 +8,18 @@ int mainMenu(char* imeDatoteke) {
 
 	int odabir1 = 1;
 
-	while (odabir1 != 6) {
+	while (odabir1 != 7) {
 
 		system("cls");
 
 		printf("\n==========Main Menu==========");			//realloc
 		printf("\n\n 1. Add new Space Marine Squad");		//dinamicki alocirat temp polje koje ima velicinu kao polje u datoteci ali + 1 kada dodajemo novog
-		printf("\n\n 2. Remove a Space Marine Squad");
+		printf("\n\n 2. Remove a Space Marine Squad");		//overwriteat novim poljem ono staro u datoteci
 		printf("\n\n 3. Print the list");
 		printf("\n\n 4. Sort the list");
 		printf("\n\n 5. Search the list");
-		printf("\n\n 6. Exit");
-
+		printf("\n\n 6. Check number of squads in file");
+		printf("\n\n 7. Exit");
 		printf("\n\n Odabir : ");
 
 
@@ -43,6 +43,10 @@ int mainMenu(char* imeDatoteke) {
 
 		case 5:
 			searchMenu();
+			break;
+
+		case 6:
+			provjeraBrojaSquadova(imeDatoteke);
 			break;
 
 		default:
