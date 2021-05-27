@@ -17,7 +17,7 @@ int main() {
 
 	if (status == 1) {
 
-		mainMenu();
+		mainMenu(imeDatoteke);
 
 	}
 
