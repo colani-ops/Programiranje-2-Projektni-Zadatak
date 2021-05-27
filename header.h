@@ -3,6 +3,8 @@
 #ifndef header_h
 #define header_h
 
+static int squadAmount;
+
 typedef struct SpaceMarine {
 
 	char name[64];
@@ -24,6 +26,7 @@ typedef struct SpaceMarineSquad {
 
 
 int provjeraDatoteke(char* imeDatoteke);
+void provjeraBrojaSquadova(char* imeDatoteke);
 void dodavanjeSquada(char* imeDatoteke);
 SMSquad* sRead(char* imeDatoteke);
 void sWrite(char* imeDatoteke, SMSquad* outArray, int sizeOfOutArray);
