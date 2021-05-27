@@ -1,7 +1,7 @@
 #ifndef menus_h
 #define menus_h
 
-int mainMenu();
+int mainMenu(char* imeDatoteke);
 int searchMenu();
 int sortMenu();
 
