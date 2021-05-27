@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <conio.h>
 
-int mainMenu() {
+int mainMenu(char* imeDatoteke) {
 
 	int odabir1 = 1;
 
@@ -12,9 +12,9 @@ int mainMenu() {
 
 		system("cls");
 
-		printf("\n==========Main Menu==========");//realloc
-		printf("\n\n 1. Add new Space Marine");		//dinamicki alocirat temp polje koje ima velicinu kao polje u datoteci ali + 1 kada dodajemo novog
-		printf("\n\n 2. Remove a Space Marine");
+		printf("\n==========Main Menu==========");			//realloc
+		printf("\n\n 1. Add new Space Marine Squad");		//dinamicki alocirat temp polje koje ima velicinu kao polje u datoteci ali + 1 kada dodajemo novog
+		printf("\n\n 2. Remove a Space Marine Squad");
 		printf("\n\n 3. Print the list");
 		printf("\n\n 4. Sort the list");
 		printf("\n\n 5. Search the list");
@@ -28,6 +28,7 @@ int mainMenu() {
 		switch (odabir1) {
 
 		case 1:
+			dodavanjeSquada(imeDatoteke);
 			break;
 
 		case 2:
