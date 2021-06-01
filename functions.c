@@ -61,26 +61,25 @@ void pocetnoDodavanjeSquada(char* imeDatoteke, int squadAmount) { //dinamicki al
 
 	int i, j;
 
-	SMSquad* TempSquadArray = (SMSquad*)malloc(squadAmount * sizeof(SMSquad));
+	SMSquad* TempSquadArray = (SMSquad*)malloc(squadAmount * sizeof(SMSquad)); //dinamicka alokacija temp polja squadova
 	if (TempSquadArray == NULL) {
 		perror("SMSquad pointer tempsquadarray je NULL, dinamicka alokacija se nije mogla izvrsiti kod pocetnog dodavanja");
 		exit(EXIT_FAILURE);
 	}
 
-	for (i = 0; i < squadAmount; i++) {
+	for (i = 0; i < squadAmount; i++) { //prolazak kroz polje squadova
 
 		printf("\n\nUnesite broj marinaca u %d. squadu : ", i + 1);
-
 		scanf("%d", &(TempSquadArray + i) -> marineCount);
 
-		SM* TempMarineArray = (SM*)malloc((TempSquadArray + i)->marineCount) * sizeof(SM);
+		(TempSquadArray + i)->marinesArray = (SM*)malloc((TempSquadArray + i)->marineCount) * sizeof(SM);
 		
-		for (j = 0; j < (TempSquadArray + i) -> marineCount; j++) {
+		for (j = 0; j < (TempSquadArray + i) -> marineCount; j++) { //prolazak kroz polje marinaca
 
 			//Kako doci do marinesArray koji je vec u strukturi?
 
 			printf("\nUnesite ime %d. Space Marinca.", j + 1);
-			//fgets ili scanf sa %s
+			fgets((TempSquadArray + i)->(marinesArray + j)->name, 16, stdin);
 
 			printf("\nUnesite rank %d. Space Marinca.", j + 1);
 			printf("\n 1.Battle Brother");
@@ -88,10 +87,10 @@ void pocetnoDodavanjeSquada(char* imeDatoteke, int squadAmount) { //dinamicki al
 			printf("\n 3.Lieuetenant");
 			printf("\n 4.Captain");
 			printf("\n 5.Vanguard\n");
-			scanf("%d", &((TempSquadArray + i) -> (TempMarineArray+ j) -> rank)));
+			scanf("%d", &((TempSquadArray + i) -> (TempMarineArray+ j) -> rank));
 
 			printf("\nUnesite starost %d. Space Marinca : ", j + 1);
-			//scanf("%d", );
+			scanf("%d",&((TempSquadArray + i)->(TempMarineArray + j)->age));
 
 			printf("\nUnesite godine u sluzbi %d. Space Marinca", j + 1);
 			//scanf("%d", );
