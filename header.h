@@ -27,12 +27,12 @@ typedef struct SpaceMarineSquad {
 
 int provjeraDatoteke(char* imeDatoteke);
 void provjeraBrojaSquadova(char* imeDatoteke);
-SMSquad* pocetnoDodavanjeSquada(imeDatoteke, squadAmount);
+SMSquad* pocetnoDodavanjeSquada(char* imeDatoteke);
 
 void dodavanjeSquada(char* imeDatoteke);
 
-SMSquad* sRead(char* imeDatoteke, int squadAmount);
-void sWrite(char* imeDatoteke, SMSquad* outArray, int squadAmount);
+SMSquad* sRead(char* imeDatoteke);
+void sWrite(char* imeDatoteke, SMSquad* outArray);
 void sPrint(char* imeDatoteke);
 
 #endif //header_h
