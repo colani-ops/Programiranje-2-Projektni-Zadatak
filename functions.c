@@ -345,7 +345,7 @@ void sPrint(char* imeDatoteke) {
 
 			printf("\n\n\t===%d. Marine===", j + 1);
 
-			printf("\n\tName : %s", PrintSquadArray[i].marinesArray[j].name);
+			printf("\n\tName : %s", PrintSquadArray[i].marinesArray[j].name); //puca ovdje nakon sto se prog restartira
 
 			printf("\n\tRank : ");
 
