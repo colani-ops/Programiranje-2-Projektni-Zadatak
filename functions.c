@@ -29,8 +29,8 @@ int provjeraDatoteke(char* imeDatoteke) {
 		scanf("%d", &squadAmount);
 		fwrite(&squadAmount, sizeof(int), 1, input);
 
-		SMSquad* TempSquadArray = pocetnoDodavanjeSquada(imeDatoteke, squadAmount);
-		sWrite(imeDatoteke, TempSquadArray, squadAmount);
+		SMSquad* TempSquadArray = pocetnoDodavanjeSquada(imeDatoteke);
+		sWrite(imeDatoteke, TempSquadArray);
 
 
 
@@ -55,7 +55,7 @@ int provjeraDatoteke(char* imeDatoteke) {
 
 
 
-SMSquad* pocetnoDodavanjeSquada(char* imeDatoteke, int squadAmount) { //dinamicki alocirati polje squadova ovdje za squadAmount broj clanova, prilikom dodavanja novih clanova otvoriti file na append nacin, pregaziti prvi int (coutner) sa novim odnosno squadAmount++ i onda appendirati na kraj novi squad.
+SMSquad* pocetnoDodavanjeSquada(char* imeDatoteke) { //dinamicki alocirati polje squadova ovdje za squadAmount broj clanova, prilikom dodavanja novih clanova otvoriti file na append nacin, pregaziti prvi int (coutner) sa novim odnosno squadAmount++ i onda appendirati na kraj novi squad.
 
 	system("cls");
 
@@ -88,13 +88,20 @@ SMSquad* pocetnoDodavanjeSquada(char* imeDatoteke, int squadAmount) { //dinamick
 			printf("\n 3.Lieuetenant");
 			printf("\n 4.Captain");
 			printf("\n 5.Vanguard\n");
-			scanf("%d", &(TempSquadArray[i].marinesArray[j].rank)); //_getch();
+			
+			do {
+				scanf("%d", &(TempSquadArray[i].marinesArray[j].rank)); //kako ogranicit da ne prima string
+			} while (TempSquadArray[i].marinesArray[j].rank > 5);
 
 			printf("\nUnesite starost %d. Space Marinca : ", j + 1);
 			scanf("%d", &(TempSquadArray[i].marinesArray[j].age)); //_getch();
 
 			printf("\nUnesite godine u sluzbi %d. Space Marinca : ", j + 1);
-			scanf("%d", &(TempSquadArray[i].marinesArray[j].yearsOfService)); //_getch();
+			scanf("%d", &(TempSquadArray[i].marinesArray[j].yearsOfService));
+			do {
+				printf("\nError, godine u sluzbi nemogu biti vece od starosti, pokusajte ponovno : ");
+				scanf("%d", &(TempSquadArray[i].marinesArray[j].yearsOfService)); //_getch();
+			} while (TempSquadArray[i].marinesArray[j].age < TempSquadArray[i].marinesArray[j].yearsOfService);
 		}
 
 		printf("\n\nUnesite tip %d. Space Marine squada : ", i + 1);
@@ -102,7 +109,9 @@ SMSquad* pocetnoDodavanjeSquada(char* imeDatoteke, int squadAmount) { //dinamick
 		printf("\n 2. Support Squad");
 		printf("\n 3. Tactical Squad\n");
 		
-		scanf("%d", &(TempSquadArray + i) -> squadType);
+		do {
+			scanf("%d", &(TempSquadArray[i].squadType));
+		} while (TempSquadArray[i].squadType > 3);
 	}
 
 	return TempSquadArray;
@@ -146,7 +155,7 @@ void provjeraBrojaSquadova(char* imeDatoteke) {
 
 void dodavanjeSquada(char* imeDatoteke) {
 
-	SMSquad* AddSquadArray = sRead(imeDatoteke, squadAmount);
+	SMSquad* AddSquadArray = sRead(imeDatoteke);
 
 	AddSquadArray = (SMSquad*)realloc(AddSquadArray, sizeof(AddSquadArray) + sizeof(SMSquad)); //realokacija temp polja squadova za + 1 squad.
 	if (AddSquadArray == NULL) {
@@ -199,7 +208,7 @@ void dodavanjeSquada(char* imeDatoteke) {
 
 	squadAmount++;
 
-	sWrite(imeDatoteke, AddSquadArray, squadAmount);
+	sWrite(imeDatoteke, AddSquadArray);
 
 	free(AddSquadArray);
 
@@ -253,21 +262,21 @@ void dodavanjeSquada(char* imeDatoteke) {
 
 
 
-SMSquad* sRead(char* imeDatoteke, int squadAmount) {
+SMSquad* sRead(char* imeDatoteke) {
 
 	FILE* input = fopen(imeDatoteke, "rb");
 	if (input == NULL) {
 		exit(EXIT_FAILURE);
 	}
-	
 
-	squadAmount = fread(squadAmount, sizeof(int), 1, input);
+	fread(&squadAmount, sizeof(int), 1, input);
 
 	SMSquad* ReadSquadArray = (SMSquad*)malloc(squadAmount * sizeof(SMSquad));
 	if (ReadSquadArray == NULL) {
 		perror("SMSquad pointer ReadSquadArray je NULL, dinamicka alokacija se nije mogla izvrsiti kod sRead");
 		exit(EXIT_FAILURE);
 	}
+
 
 
 	fread(ReadSquadArray, sizeof(SMSquad), squadAmount, input);
@@ -285,7 +294,7 @@ vrlo vjerovatno predati funkciji sWrite na kraju programa kada se sve stvari oba
 
 
 
-void sWrite(char* imeDatoteke, SMSquad* outArray, int squadAmount) {
+void sWrite(char* imeDatoteke, SMSquad* outArray) {
 
 	FILE* output = fopen(imeDatoteke, "wb");
 	if (output == NULL) {
@@ -301,7 +310,7 @@ void sWrite(char* imeDatoteke, SMSquad* outArray, int squadAmount) {
 
 void sPrint(char* imeDatoteke) {
 
-	SMSquad* PrintSquadArray = sRead(imeDatoteke, squadAmount);
+	SMSquad* PrintSquadArray = sRead(imeDatoteke);
 
 	int i, j;
 
@@ -320,11 +329,11 @@ void sPrint(char* imeDatoteke) {
 			break;
 
 		case 2:
-			printf("Tactical Squad");
+			printf("Support Squad");
 			break;
 
 		case 3:
-			printf("Support Squad");
+			printf("Tactical Squad");
 			break;
 
 		default:
@@ -368,7 +377,7 @@ void sPrint(char* imeDatoteke) {
 
 			}
 
-			printf("\n\tAge %d", PrintSquadArray[i].marinesArray[j].age);
+			printf("\n\tAge : %d", PrintSquadArray[i].marinesArray[j].age);
 
 			printf("\n\tGodine u sluzbi : %d", PrintSquadArray[i].marinesArray[j].yearsOfService);
 
@@ -378,8 +387,11 @@ void sPrint(char* imeDatoteke) {
 
 	free(PrintSquadArray);
 
+	printf("\n\nPress any key to continue.");
+	_getch();
 }
  
+
 
 void zatvaranje() {
 	exit(EXIT_SUCCESS);
