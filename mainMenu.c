@@ -27,7 +27,6 @@ int mainMenu(char* imeDatoteke) {
 		switch (odabir1) {
 
 		case 1:
-
 			dodavanjeSquada(imeDatoteke);
 			break;
 
