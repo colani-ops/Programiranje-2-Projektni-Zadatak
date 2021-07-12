@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>
+#include <assert.h>
 
 /*Polje strutura (squadova) koja u sebi imaju vise space marinaca,
 prilikom saveanja overwriteat sve u postojecoj datoteci
@@ -78,8 +79,8 @@ SMSquad* pocetnoDodavanjeSquada(char* imeDatoteke) { //dinamicki alocirati polje
 
 		for (j = 0; j < TempSquadArray[i].marineCount; j++) { //prolazak kroz polje marinaca
 
-			printf("\nUnesite ime %d. Space Marinca (16 znakova max) : ", j + 1);
-			scanf("%16s", TempSquadArray[i].marinesArray[j].name);
+			printf("\nUnesite ime %d. Space Marinca (64 znakova max) : ", j + 1);
+			scanf("%64s", TempSquadArray[i].marinesArray[j].name);
 			//fgets(TempSquadArray[i].marinesArray[j].name, 16, stdin);
 
 			printf("\nUnesite rank %d. Space Marinca : ", j + 1);
@@ -137,7 +138,7 @@ void dodavanjeSquada(char* imeDatoteke) {
 
 	int i, j;
 
-	for (i = squadAmount + 1; i < squadAmount + 2; i++) { //prolazak kroz polje squadova
+	for (i = squadAmount; i < squadAmount + 1; i++) { //prolazak kroz polje squadova
 
 		printf("\n\nUnesite broj marinaca u %d. squadu : ", i);
 		scanf("%d", &(AddSquadArray[i].marineCount));
@@ -177,7 +178,7 @@ void dodavanjeSquada(char* imeDatoteke) {
 
 	sWrite(imeDatoteke, AddSquadArray);
 
-	free(AddSquadArray->marinesArray);
+	//free(AddSquadArray->marinesArray);
 	//free(AddSquadArray);
 
 	return;
