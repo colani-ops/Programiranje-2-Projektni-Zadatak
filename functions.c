@@ -41,6 +41,10 @@ int provjeraDatoteke(char* imeDatoteke) {
 		}
 
 		fclose(input);
+
+		free(TempSquadArray->marinesArray);
+		free(TempSquadArray);
+
 	}
 
 	else {
@@ -49,6 +53,8 @@ int provjeraDatoteke(char* imeDatoteke) {
 
 		fclose(input);
 	}
+
+
 
 	return 1;
 
@@ -91,7 +97,7 @@ SMSquad* pocetnoDodavanjeSquada(char* imeDatoteke) { //dinamicki alocirati polje
 			printf("\n 5.Vanguard\n");
 
 			do {
-				scanf("%d", &(TempSquadArray[i].marinesArray[j].rank)); //kako ogranicit da ne prima string
+				scanf("%d", &(TempSquadArray[i].marinesArray[j].rank));
 			} while (TempSquadArray[i].marinesArray[j].rank > 5);
 
 			printf("\nUnesite starost %d. Space Marinca : ", j + 1);
@@ -140,7 +146,7 @@ void dodavanjeSquada(char* imeDatoteke) {
 
 	for (i = squadAmount; i < squadAmount + 1; i++) { //prolazak kroz polje squadova
 
-		printf("\n\nUnesite broj marinaca u %d. squadu : ", i);
+		printf("\n\nUnesite broj marinaca u %d. squadu : ", i + 1);
 		scanf("%d", &(AddSquadArray[i].marineCount));
 
 		AddSquadArray[i].marinesArray = (SM*)malloc((AddSquadArray[i].marineCount) * sizeof(SM));
@@ -178,8 +184,8 @@ void dodavanjeSquada(char* imeDatoteke) {
 
 	sWrite(imeDatoteke, AddSquadArray);
 
-	//free(AddSquadArray->marinesArray);
-	//free(AddSquadArray);
+	free(AddSquadArray->marinesArray);
+	free(AddSquadArray);
 
 	return;
 
@@ -233,13 +239,20 @@ SMSquad* sRead(char* imeDatoteke) {
 			break;
 		}
 
+		ReadSquadArray[i].marinesArray = (SM*)malloc((ReadSquadArray[i].marineCount) * sizeof(SM));
+
+		fread(ReadSquadArray[i].marinesArray, sizeof(SM), ReadSquadArray[i].marineCount, input);
+
 		for (j = 0; j < ReadSquadArray[i].marineCount; j++) {
+
+			//fread(ReadSquadArray[i].marinesArray[j].name, sizeof(char[64]), 1, input);
 
 			printf("\n\n\t===%d. Marine===", j + 1);
 
 			printf("\n\tName : %s", ReadSquadArray[i].marinesArray[j].name); //puca ovdje nakon sto se prog restartira
 
 			printf("\n\tRank : ");
+			fread(ReadSquadArray[i].marinesArray[j].rank, sizeof(int), 1, input);
 
 			switch (ReadSquadArray[i].marinesArray[j].rank) {
 
@@ -269,8 +282,10 @@ SMSquad* sRead(char* imeDatoteke) {
 
 			}
 
+			fread(ReadSquadArray[i].marinesArray[j].age, sizeof(int), 1, input);
 			printf("\n\tAge : %d", ReadSquadArray[i].marinesArray[j].age);
 
+			fread(ReadSquadArray[i].marinesArray[j].yearsOfService, sizeof(int), 1, input);
 			printf("\n\tGodine u sluzbi : %d", ReadSquadArray[i].marinesArray[j].yearsOfService);
 
 		}
@@ -281,8 +296,9 @@ SMSquad* sRead(char* imeDatoteke) {
 
 	_getch();
 
-	return ReadSquadArray;
+	//return ReadSquadArray;
 
+	free(ReadSquadArray->marinesArray);
 	free(ReadSquadArray);
 
 }
@@ -379,6 +395,7 @@ void sPrint(char* imeDatoteke) {
 
 	}
 
+	free(PrintSquadArray->marinesArray);
 	free(PrintSquadArray);
 
 	printf("\n\nPress any key to continue.");
