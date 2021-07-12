@@ -9,6 +9,7 @@
 int main() {
 
 	char imeDatoteke[20] = { '\0' };
+	printf("\nObavezno dodajte .bin na kraju imena datoteke.");
 	printf("\nUnesite ime datoteke u program : ");
 	scanf("%s", imeDatoteke);
 	//fgets(imeDatoteke,20,stdin)
