@@ -34,7 +34,7 @@ int mainMenu(char* imeDatoteke) {
 			break;
 
 		case 3:
-			sPrint(imeDatoteke);
+			sRead(imeDatoteke);
 			break;
 
 		case 4:
