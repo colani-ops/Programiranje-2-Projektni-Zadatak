@@ -33,6 +33,6 @@ void dodavanjeSquada(char* imeDatoteke);
 
 SMSquad* sRead(char* imeDatoteke);
 void sWrite(char* imeDatoteke, SMSquad* outArray);
-void sPrint(char* imeDatoteke);
+void sPrint(const char* const imeDatoteke, SMSquad* printArray);
 
 #endif //header_h
