@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <conio.h>
 
-int mainMenu(char* imeDatoteke) {
+int mainMenu(const char* const imeDatoteke) {
 
 	int odabir1 = 1;
 
@@ -17,7 +17,7 @@ int mainMenu(char* imeDatoteke) {
 		printf("\n\n 2. Remove a Space Marine Squad");		//overwriteat novim poljem ono staro u datoteci
 		printf("\n\n 3. Print the list");
 		printf("\n\n 4. Sort the list");;
-		printf("\n\n 5. Check number of squads in file");
+		printf("\n\n 5. Check number of squads in file and file name");
 		printf("\n\n 6. Exit");
 		printf("\n\n Odabir : ");
 
@@ -34,7 +34,7 @@ int mainMenu(char* imeDatoteke) {
 			break;
 
 		case 3:
-			sRead(imeDatoteke);
+			sPrint(imeDatoteke, sRead(imeDatoteke));
 			break;
 
 		case 4:
@@ -43,6 +43,10 @@ int mainMenu(char* imeDatoteke) {
 
 		case 5:
 			provjeraBrojaSquadova(imeDatoteke);
+			printf("\nFile name : ");
+			printf("%s", imeDatoteke);
+			printf("\n\nPress any key to continue.");
+			_getch();
 			break;
 
 		default:
