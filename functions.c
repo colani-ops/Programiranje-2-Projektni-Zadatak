@@ -16,45 +16,36 @@ squadova odnosno velicinu polja squadova (prilikom dodavanja squadova se velicin
 
 
 
-int provjeraDatoteke(char* imeDatoteke) {
-
-	FILE* input = fopen(imeDatoteke, "rb+");
+int provjeraDatoteke(const char* const imeDatoteke) {
 
 	printf("Funkcija provjera datoteke...\n");
+
+	FILE* input = fopen(imeDatoteke, "rb");
 
 	if (input == NULL) {
 		printf("\nNe postoji datoteka, kreiranje datoteke...");
 
-		FILE* input = fopen(imeDatoteke, "wb+");
-		printf("\nUnesite pocetni broj squadova : ");
-		scanf("%d", &squadAmount);
-		fwrite(&squadAmount, sizeof(int), 1, input);
-
-		SMSquad* TempSquadArray = pocetnoDodavanjeSquada(imeDatoteke);
-		sWrite(imeDatoteke, TempSquadArray);
-
-
-
+		FILE* input = fopen(imeDatoteke, "wb");
 		if (input == NULL) {
 			printf("\nGreska u kreiranju datoteke");
 			exit(EXIT_FAILURE);
 		}
 
+		printf("\nUnesite pocetni broj squadova : ");
+		scanf("%d", &squadAmount);
+		fwrite(&squadAmount, sizeof(int), 1, input);
+
 		fclose(input);
 
-		free(TempSquadArray->marinesArray);
-		free(TempSquadArray);
+		sWrite(imeDatoteke, pocetnoDodavanjeSquada(imeDatoteke));
 
-	}
 
-	else {
+	}else {
 
 		fread(&squadAmount, sizeof(int), 1, input);
 
 		fclose(input);
 	}
-
-
 
 	return 1;
 
@@ -62,7 +53,13 @@ int provjeraDatoteke(char* imeDatoteke) {
 
 
 
-SMSquad* pocetnoDodavanjeSquada(char* imeDatoteke) { //dinamicki alocirati polje squadova ovdje za squadAmount broj clanova, prilikom dodavanja novih clanova otvoriti file na append nacin, pregaziti prvi int (coutner) sa novim odnosno squadAmount++ i onda appendirati na kraj novi squad.
+SMSquad* pocetnoDodavanjeSquada(const char* const imeDatoteke) { //dinamicki alocirati polje squadova ovdje za squadAmount broj clanova, prilikom dodavanja novih clanova otvoriti file na append nacin, pregaziti prvi int (coutner) sa novim odnosno squadAmount++ i onda appendirati na kraj novi squad.
+
+	FILE* input = fopen(imeDatoteke, "wb");
+	if (input == NULL) {
+		exit(EXIT_FAILURE);
+	}
+
 
 	system("cls");
 
@@ -78,6 +75,8 @@ SMSquad* pocetnoDodavanjeSquada(char* imeDatoteke) { //dinamicki alocirati polje
 
 	for (i = 0; i < squadAmount; i++) { //prolazak kroz polje squadova
 
+		TempSquadArray[i].squadNumber = i + 1;
+
 		printf("\n\nUnesite broj marinaca u %d. squadu : ", i + 1);
 		scanf("%d", &(TempSquadArray[i].marineCount));
 
@@ -86,7 +85,7 @@ SMSquad* pocetnoDodavanjeSquada(char* imeDatoteke) { //dinamicki alocirati polje
 		for (j = 0; j < TempSquadArray[i].marineCount; j++) { //prolazak kroz polje marinaca
 
 			printf("\nUnesite ime %d. Space Marinca (64 znakova max) : ", j + 1);
-			scanf("%64s", TempSquadArray[i].marinesArray[j].name);
+			scanf("%s", TempSquadArray[i].marinesArray[j].name);
 			//fgets(TempSquadArray[i].marinesArray[j].name, 16, stdin);
 
 			printf("\nUnesite rank %d. Space Marinca : ", j + 1);
@@ -119,6 +118,7 @@ SMSquad* pocetnoDodavanjeSquada(char* imeDatoteke) { //dinamicki alocirati polje
 		do {
 			scanf("%d", &(TempSquadArray[i].squadType));
 		} while (TempSquadArray[i].squadType > 3);
+
 	}
 
 	return TempSquadArray;
@@ -127,11 +127,12 @@ SMSquad* pocetnoDodavanjeSquada(char* imeDatoteke) { //dinamicki alocirati polje
 
 
 
-void dodavanjeSquada(char* imeDatoteke) {
+void dodavanjeSquada(const char* const imeDatoteke) {
 
 	SMSquad* AddSquadArray = sRead(imeDatoteke);
+	//free(ReadSquadArray);
 
-	AddSquadArray = (SMSquad*)realloc(AddSquadArray, sizeof(AddSquadArray) + sizeof(SMSquad)); //realokacija temp polja squadova za + 1 squad.
+	AddSquadArray = (SMSquad*)realloc(AddSquadArray, squadAmount * sizeof(SMSquad) + sizeof(SMSquad)); //realokacija temp polja squadova za + 1 squad.
 	if (AddSquadArray == NULL) {
 		perror("SMSquad pointer AddSquadArray je NULL, dinamicka realokacija se nije mogla izvrsiti kod dodavanja");
 		exit(EXIT_FAILURE);
@@ -144,17 +145,19 @@ void dodavanjeSquada(char* imeDatoteke) {
 
 	int i, j;
 
-	for (i = squadAmount; i < squadAmount + 1; i++) { //prolazak kroz polje squadova
+	//for (i = squadAmount; i < squadAmount + 1; i++) { //prolazak kroz polje squadova
 
-		printf("\n\nUnesite broj marinaca u %d. squadu : ", i + 1);
-		scanf("%d", &(AddSquadArray[i].marineCount));
+		AddSquadArray[squadAmount].squadNumber = squadAmount + 1;
 
-		AddSquadArray[i].marinesArray = (SM*)malloc((AddSquadArray[i].marineCount) * sizeof(SM));
+		printf("\n\nUnesite broj marinaca u %d. squadu : ", squadAmount + 1);
+		scanf("%d", &(AddSquadArray[squadAmount].marineCount));
 
-		for (j = 0; j < AddSquadArray[i].marineCount; j++) { //prolazak kroz polje marinaca
+		AddSquadArray[squadAmount].marinesArray = (SM*)malloc((AddSquadArray[squadAmount].marineCount) * sizeof(SM));
+
+		for (j = 0; j < AddSquadArray[squadAmount].marineCount; j++) { //prolazak kroz polje marinaca
 
 			printf("\nUnesite ime %d. Space Marinca (64 znakova max) : ", j + 1);
-			scanf("%64s", AddSquadArray[i].marinesArray[j].name);
+			scanf("%64s", AddSquadArray[squadAmount].marinesArray[j].name);
 			//fgets(TempSquadArray[i].marinesArray[j].name, 16, stdin);
 
 			printf("\nUnesite rank %d. Space Marinca : ", j + 1);
@@ -163,22 +166,21 @@ void dodavanjeSquada(char* imeDatoteke) {
 			printf("\n 3.Lieuetenant");
 			printf("\n 4.Captain");
 			printf("\n 5.Vanguard\n");
-			scanf("%d", &(AddSquadArray[i].marinesArray[j].rank));
+			scanf("%d", &(AddSquadArray[squadAmount].marinesArray[j].rank));
 
 			printf("\nUnesite starost %d. Space Marinca : ", j + 1);
-			scanf("%d", &(AddSquadArray[i].marinesArray[j].age));
+			scanf("%d", &(AddSquadArray[squadAmount].marinesArray[j].age));
 
 			printf("\nUnesite godine u sluzbi %d. Space Marinca : ", j + 1);
-			scanf("%d", &(AddSquadArray[i].marinesArray[j].yearsOfService));
+			scanf("%d", &(AddSquadArray[squadAmount].marinesArray[j].yearsOfService));
 		}
 
-		printf("\n\nUnesite tip %d. Space Marine squada : ", i + 1);
+		printf("\n\nUnesite tip %d. Space Marine squada : ", squadAmount + 1);
 		printf("\n 1. Assault Squad");
 		printf("\n 2. Support Squad");
 		printf("\n 3. Tactical Squad\n");
 
-		scanf("%d", &(AddSquadArray + i)->squadType);
-	}
+		scanf("%d", &(AddSquadArray + squadAmount)->squadType);
 
 	squadAmount++;
 
@@ -192,8 +194,9 @@ void dodavanjeSquada(char* imeDatoteke) {
 }
 
 
-
-SMSquad* sRead(char* imeDatoteke) {
+/*Ova funkcija cita zapisane squadove (polje squadova) u datoteci. Namjenjena je spremati ono sto procita u privremeno polje squadova koje ce
+vrlo vjerovatno predati funkciji sWrite na kraju programa kada se sve stvari obave na njoj, koja sve to zapisuje u datoteku preko postojecih informacija*/
+SMSquad* sRead(const char* const imeDatoteke) {
 
 	FILE* input = fopen(imeDatoteke, "rb");
 	if (input == NULL) {
@@ -216,7 +219,7 @@ SMSquad* sRead(char* imeDatoteke) {
 
 	for (i = 0; i < squadAmount; i++) {
 
-		printf("\n\n===%d. Squad===", i + 1);
+		/*printf("\n\n===%d. Squad===", i + 1);
 
 		printf("\nSquad type : ");
 
@@ -237,13 +240,13 @@ SMSquad* sRead(char* imeDatoteke) {
 		default:
 			printf("Unknown");
 			break;
-		}
+		}*/
 
 		ReadSquadArray[i].marinesArray = (SM*)malloc((ReadSquadArray[i].marineCount) * sizeof(SM));
 
 		fread(ReadSquadArray[i].marinesArray, sizeof(SM), ReadSquadArray[i].marineCount, input);
 
-		for (j = 0; j < ReadSquadArray[i].marineCount; j++) {
+		/*for (j = 0; j < ReadSquadArray[i].marineCount; j++) {
 
 			//fread(ReadSquadArray[i].marinesArray[j].name, sizeof(char[64]), 1, input);
 
@@ -252,7 +255,7 @@ SMSquad* sRead(char* imeDatoteke) {
 			printf("\n\tName : %s", ReadSquadArray[i].marinesArray[j].name); //puca ovdje nakon sto se prog restartira
 
 			printf("\n\tRank : ");
-			fread(ReadSquadArray[i].marinesArray[j].rank, sizeof(int), 1, input);
+			//fread(ReadSquadArray[i].marinesArray[j].rank, sizeof(int), 1, input);
 
 			switch (ReadSquadArray[i].marinesArray[j].rank) {
 
@@ -282,45 +285,44 @@ SMSquad* sRead(char* imeDatoteke) {
 
 			}
 
-			fread(ReadSquadArray[i].marinesArray[j].age, sizeof(int), 1, input);
+			//fread(ReadSquadArray[i].marinesArray[j].age, sizeof(int), 1, input);
 			printf("\n\tAge : %d", ReadSquadArray[i].marinesArray[j].age);
 
-			fread(ReadSquadArray[i].marinesArray[j].yearsOfService, sizeof(int), 1, input);
+			//fread(ReadSquadArray[i].marinesArray[j].yearsOfService, sizeof(int), 1, input);
 			printf("\n\tGodine u sluzbi : %d", ReadSquadArray[i].marinesArray[j].yearsOfService);
 
-		}
+		}*/
 
 	}
 
 	fclose(input);
 
-	_getch();
-
-	//return ReadSquadArray;
-
-	free(ReadSquadArray->marinesArray);
-	free(ReadSquadArray);
+	return ReadSquadArray;
 
 }
 
-/*Ova funkcija cita zapisane squadove (polje squadova) u datoteci. Namjenjena je spremati ono sto procita u privremeno polje squadova koje ce
-vrlo vjerovatno predati funkciji sWrite na kraju programa kada se sve stvari obave na njoj, koja sve to zapisuje u datoteku preko postojecih informacija*/
-void sWrite(char* imeDatoteke, SMSquad* outArray) {
+void sWrite(const char* const imeDatoteke, SMSquad* outArray) {
 
 	FILE* output = fopen(imeDatoteke, "wb");
 	if (output == NULL) {
 		exit(EXIT_FAILURE);
 	}
 
+	
 	fwrite(&squadAmount, sizeof(int), 1, output);
-	fwrite(outArray, sizeof(SMSquad), squadAmount, output);
+	//for petlja (&outarray[i])
+	int i, j;
+	for (i = 0; i < squadAmount; i++) {
+		fwrite(&outArray[i], sizeof(SMSquad), 1, output);
+		fwrite(&outArray[i].marinesArray[j], sizeof(SM), outArray[i].marineCount, output); //ovo je nedostajalo
+
+	}
+
 	fclose(output);
 }
 
 
-void sPrint(char* imeDatoteke) {
-
-	SMSquad* PrintSquadArray = sRead(imeDatoteke);
+void sPrint(const char* const imeDatoteke, SMSquad* printArray) {
 
 	int i, j;
 
@@ -332,7 +334,7 @@ void sPrint(char* imeDatoteke) {
 
 		printf("\nSquad type : ");
 
-		switch (PrintSquadArray[i].squadType) {
+		switch (printArray[i].squadType) {
 
 		case 1:
 			printf("Assault Squad");
@@ -351,15 +353,15 @@ void sPrint(char* imeDatoteke) {
 			break;
 		}
 
-		for (j = 0; j < PrintSquadArray[i].marineCount; j++) {
+		for (j = 0; j < printArray[i].marineCount; j++) {
 
 			printf("\n\n\t===%d. Marine===", j + 1);
 
-			printf("\n\tName : %s", PrintSquadArray[i].marinesArray[j].name); //puca ovdje nakon sto se prog restartira
+			printf("\n\tName : %s", printArray[i].marinesArray[j].name); //puca ovdje nakon sto se prog restartira
 
 			printf("\n\tRank : ");
 
-			switch (PrintSquadArray[i].marinesArray[j].rank) {
+			switch (printArray[i].marinesArray[j].rank) {
 
 			case 1:
 				printf("Battle brother");
@@ -387,21 +389,20 @@ void sPrint(char* imeDatoteke) {
 
 			}
 
-			printf("\n\tAge : %d", PrintSquadArray[i].marinesArray[j].age);
+			printf("\n\tAge : %d", printArray[i].marinesArray[j].age);
 
-			printf("\n\tGodine u sluzbi : %d", PrintSquadArray[i].marinesArray[j].yearsOfService);
+			printf("\n\tGodine u sluzbi : %d", printArray[i].marinesArray[j].yearsOfService);
 
 		}
 
 	}
 
-	free(PrintSquadArray->marinesArray);
-	free(PrintSquadArray);
+	free(printArray->marinesArray);
+	free(printArray);
 
 	printf("\n\nPress any key to continue.");
 	_getch();
 }
-
 
 /*void brisanjeSquada() {
 
@@ -409,7 +410,7 @@ void sPrint(char* imeDatoteke) {
 
 }*/
 
-void provjeraBrojaSquadova(char* imeDatoteke) {
+void provjeraBrojaSquadova(const char* const imeDatoteke) {
 
 	FILE* file = fopen(imeDatoteke, "rb");
 
@@ -417,8 +418,6 @@ void provjeraBrojaSquadova(char* imeDatoteke) {
 	system("cls");
 
 	printf("\nTrenutni broj squadova je : %d", squadAmount);
-	printf("\n\nPress any key to continue.");
-	_getch();
 
 	fclose(file);
 
